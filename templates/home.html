@@ -1,0 +1,390 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.79.0">
+
+    <meta name="docsearch:language" content="en">
+    <meta name="docsearch:version" content="5.0">
+
+    <title>Autocloud Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <link href="{{ url_for('static',filename='css/doc.css') }}" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <header class="navbar navbar-expand-md navbar-dark bd-navbar fixed-top">
+      <nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">AUTOCLOUD</a>
+        
+
+        <div class="collapse navbar-collapse" id="bdNavbar">
+          <hr class="d-md-none text-white-50">
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-warning" type="submit">Search</button>
+          </form>
+        </div>
+
+        <button class="btn btn-outline-warning ml-4" type="button" id="save-row">Save</button>
+      </nav>
+    </header>
+
+  <div class="container-xxl my-md-4 bd-layout">
+    <aside class="bd-sidebar bg-light" style="width: 230px;">
+      <nav class="collapse bd-links" id="bd-docs-nav" aria-label="Docs navigation">
+        <ul class="list-unstyled mb-0 py-3 pt-md-1">
+
+          <li class="mb-3">
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#year" aria-expanded="false">
+              Year
+            </button>
+            <div class="collapse" id="year">
+              
+              <div class="form-check">
+                <input class="form-check-input small" type="checkbox" value="2021" id="year2021">
+                <label class="form-check-label small" for="year2021">
+                  2021
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input small" type="checkbox" value="2020" id="year2020">
+                <label class="form-check-label small" for="year2020">
+                  2020
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input small" type="checkbox" value="2017" id="year2017">
+                <label class="form-check-label small" for="year2017">
+                  2017
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input small" type="checkbox" value="2012" id="year2012">
+                <label class="form-check-label small" for="year2012">
+                  2012
+                </label>
+              </div>
+
+            </div>
+          </li>
+
+          <li class="mb-3">
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#make" aria-expanded="false">
+              Make
+            </button>
+            <div class="collapse" id="make">
+              {% for make in make_model %}
+              <div class="form-check">
+                <input class="form-check-input small" type="checkbox" value="{{ make }}" id="{{ make|lower }}">
+                <label class="form-check-label small" for="{{ make|lower }}">
+                  {{ make }}
+                </label>
+              </div>
+              {% endfor %}
+
+            </div>
+          </li>
+
+          <li class="mb-3">
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#model" aria-expanded="false">
+              Model
+            </button>
+            <div class="collapse" id="model">
+              {% for model_list in make_model.values() %}
+              {% for model in model_list %}
+              <div class="form-check">
+                <input class="form-check-input small" type="checkbox" value="{{ model }}" id="{{ model|lower }}">
+                <label class="form-check-label small" for="{{ model|lower }}">
+                  {{ model }}
+                </label>
+              </div>
+              {% endfor %}
+              {% endfor %}
+            </div>
+          </li>
+
+          <li class="mb-3">
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#odometer" aria-expanded="false">
+              Odometer
+            </button>
+            <div class="collapse" id="odometer">
+              <div class="row g-3 mt-1">
+                <div class="col-sm-6">
+                  <input type="text" id="min-odometer" class="form-control" placeholder="Min">
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" id="max-odometer" class="form-control" placeholder="Max">
+                </div>
+              </div>
+              
+              <!-- <div class="input-group ml-2 mt-2 input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Min</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Odometer">
+              </div>
+
+              <div class="input-group ml-2 mt-2 input-group-sm">  
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Max</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Odometer">
+              </div> -->
+
+            </div>
+          </li>
+
+          <li class="mb-4">
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#price" aria-expanded="false">
+              Price
+            </button>
+            <div class="collapse" id="price">
+              <div class="row g-3 mt-1">
+                <div class="col-sm-6">
+                  <input type="text" id="min-price" class="form-control" placeholder="Min">
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" id="max-price" class="form-control" placeholder="Max">
+                </div>
+              </div>
+              
+              <!-- <div class="input-group ml-2 mt-2 input-group-sm">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Min</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Price">
+              </div>
+
+              <div class="input-group ml-2 mt-2 input-group-sm">  
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Max</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Price">
+              </div> -->
+
+            </div>
+          </li>
+
+          <!-- btn::before is defined in css file which add > to all the buttons. So removed btn class -->
+          <li class="mt-3 text-center">
+            <button type="button" class="btn-outline-success" id="filter-apply-btn">Apply</button>
+          </li>
+
+          <li class="my-3 mx-4 border-top"></li>
+          <li>
+            <a href="/docs/5.0/migration/" class="d-inline-flex align-items-center rounded">
+              Saved Results
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="order-1">
+      <div class="bd-intro ps-lg-4">
+        <h2 class="text-center">Potential Deals</h2>
+      </div>
+
+      <div class="ps-lg-4">
+          
+
+        <div class="table-responsive mb-4">
+            <table class="table table-striped table-sm" id="potential-deals-table" style="font-size: 12px;">
+              <thead class="thead-dark">
+                <tr>
+                  {% for header in table_headers %}
+                  <th class="text-center">{{ header }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for record in records %}
+                <tr>
+                  {% for header in table_headers %}
+                  {% if header == "Action" %}
+                  <td>
+                    <select class="form-select form-select-sm" style="width: 200px">
+                      <option value="None" {% if record[header] is none %} selected {% endif %}>None</option>
+                      <option value="Action1" {% if record[header] == "Action1" %} selected {% endif %}>Action1</option>
+                      <option value="Action2" {% if record[header] == "Action2" %} selected {% endif %}>Action2</option>
+                      <option value="Action3" {% if record[header] == "Action3" %} selected {% endif %}>Action3</option>
+                    </select>
+                  </td>
+                  {% elif header == "Comment" %}
+                  <td>
+                    <input type="text" class="form-select-sm"  style="width: 430px" placeholder="Comments" value="{{ record[header] }}">
+                  </td>
+                  {% else %}
+                  <td class="text-center {{ header|lower }}-col">{{ record[header] }}</td>
+                  {% endif %}
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- <footer class="navbar navbar-expand-md navbar-light bd-navbar fixed-bottom"> -->
+  <!-- <nav class="container-fluid flex-wrap flex-md-nowrap fixed-bottom bd-navbar">
+    <form class="row mx-4" action="{{ url_for('save_comments') }}" method="post" id="save-comments-form">
+      <div class="col-2">
+        <input class="form-control me-2" type="text" placeholder="ID" aria-label="table-id" id="potential-deals-table-id" name="table_id" readonly>
+      </div>
+      <div class="col-8">
+        <input class="form-control me-2" type="text" placeholder="Comments" aria-label="comments" id="potential-deals-table-comments" name="comments">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-warning" id="save-comments-btn" type="submit">Save</button>
+      </div>
+    </form>
+  </nav> -->
+  
+
+    <!-- <footer class="navbar navbar-expand-md navbar-light bd-navbar fixed-bottom">
+      <nav class="container-xxl flex-wrap flex-md-nowrap">
+        <form class="row">
+          <div class="col-3">
+            <input class="form-control me-2" type="text" placeholder="ID" aria-label="table-id" id="potential-deals-table-id" readonly>
+          </div>
+          <div class="col-7">
+            <input class="form-control me-2" type="search" placeholder="Comments" aria-label="Search">  
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-outline-warning" type="submit">Save</button>
+          </div>
+        </form>
+      </nav>
+    </footer> -->
+
+    <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      var selectedRow;
+
+      $(document).ready(function() {
+        $('#potential-deals-table tbody').on( 'click', 'tr', function () {
+          if (selectedRow != null) {
+            selectedRow.removeClass('table-warning');
+          }
+          $(this).addClass('table-warning');
+          selectedRow = $(this);
+          });
+
+      });
+
+      $('#filter-apply-btn').click(function() {
+        console.log("Inside filter apply button");
+        $("#potential-deals-table tbody tr td.price-col").filter(function() {
+          $(this).parent().show();
+        });
+
+        $("#year input:checked").each(function() {
+            console.log("Year selected " + $(this).attr('value'));
+            $("#potential-deals-table tbody tr td.make_model_year-col").filter(function() {
+            console.log($(this).text().toLowerCase());
+              if ($(this).text().toLowerCase().indexOf($(this).attr('value')) == -1) {
+                $(this).parent().hide();
+              }
+            });
+        });
+
+
+        var min_price = $("#min-price").val();
+        var max_price = $("#max-price").val();
+        console.log("Min price " + min_price);
+        console.log("Max price " + max_price);
+        if (min_price.trim()) {
+          console.log("Applying Min filter")
+          $("#potential-deals-table tbody tr td.price-col").filter(function() {
+            if (parseFloat($(this).text()) < parseFloat(min_price)) {
+              $(this).parent().hide();
+            }
+          });
+        }
+
+        if (max_price.trim()) {
+          console.log("Applying Max filter")
+          $("#potential-deals-table tbody tr td.price-col").filter(function() {
+            if (parseFloat($(this).text()) > parseFloat(max_price)) {
+              $(this).parent().hide();
+            }
+          });
+        }
+
+
+        var min_odometer = $("#min-odometer").val();
+        var max_odometer = $("#max-odometer").val();
+        console.log("Min odometer " + min_odometer);
+        console.log("Max odometer " + max_odometer);
+        if (min_odometer.trim()) {
+          console.log("Applying Min odometer filter")
+          $("#potential-deals-table tbody tr td.odometer-col").filter(function() {
+            if (parseFloat($(this).text()) < parseFloat(min_odometer)) {
+              $(this).parent().hide();
+            }
+          });
+        }
+
+        if (max_price.trim()) {
+          console.log("Applying Max odometer filter")
+          $("#potential-deals-table tbody tr td.odometer-col").filter(function() {
+            if (parseFloat($(this).text()) > parseFloat(max_odometer)) {
+              $(this).parent().hide();
+            }
+          });
+        }
+
+
+      });
+
+      $("#save-row").on("click", function (e) {
+        console.log("onClick event for save button");
+        var processingRow = selectedRow;
+        var dataString = $(this).serialize();
+        var dealId = processingRow.find("td").eq(0).html();
+        var dealAction = processingRow.find("td").eq(38).find("select option:selected").val();
+        var dealComments = processingRow.find("td").eq(39).find("input").val();
+          console.log("Deal Id is " + dealId);
+          console.log("Deal Action is " + dealAction);
+          console.log("Deal Comments are " + dealComments);
+
+        $.ajax({
+          type: "POST",
+          url: "{{ url_for('save_comments') }}",
+          data: {
+            "id": dealId,
+            "action": dealAction,
+            "comments": dealComments
+          },
+          success: function (result) {
+            // Display message back to the user here
+            processingRow.removeClass('table-warning');
+            processingRow.addClass('table-success');
+
+          },
+          error: function (result) {
+            // Display message back to the user
+            processingRow.removeClass('table-warning');
+            processingRow.addClass('table-danger');
+          }
+        });
+
+        e.preventDefault();
+      });
+      
+    </script>
+  
+  </body>
+</html>
