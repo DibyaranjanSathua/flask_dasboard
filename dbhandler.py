@@ -37,7 +37,7 @@ class DBHandler:
         return query_result
 
     def get_all_potential_records(self):
-        sql = "SELECT * FROM PotentialDeal"
+        sql = "SELECT * FROM PotentialDeal ORDER BY PotentialDealID DESC"
         cursor = self.db_conn.cursor(dictionary=True)
         cursor.execute(sql)
         return cursor.fetchall()

@@ -24,56 +24,40 @@
     <header class="navbar navbar-expand-md navbar-dark bd-navbar fixed-top">
       <nav class="container-xxl flex-wrap flex-md-nowrap" aria-label="Main navigation">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">AUTOCLOUD</a>
-        
 
-        <div class="collapse navbar-collapse" id="bdNavbar">
-          <hr class="d-md-none text-white-50">
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-warning" type="submit">Search</button>
-          </form>
-        </div>
+
+<!--        <div class="collapse navbar-collapse" id="bdNavbar">-->
+<!--          <hr class="d-md-none">-->
+<!--          <form class="d-flex">-->
+<!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--            <button class="btn btn-outline-warning" type="submit">Search</button>-->
+<!--          </form>-->
+<!--        </div>-->
+
+        <h3 class="text-warning">Potential Deals</h3>
 
         <button class="btn btn-outline-warning ml-4" type="button" id="save-row">Save</button>
       </nav>
     </header>
 
-  <div class="container-xxl my-md-4 bd-layout">
+  <div class="container-fluid my-md-4 ml-1 bd-layout">
     <aside class="bd-sidebar bg-light" style="width: 230px;">
       <nav class="collapse bd-links" id="bd-docs-nav" aria-label="Docs navigation">
         <ul class="list-unstyled mb-0 py-3 pt-md-1">
 
-          <li class="mb-3">
+          <li class="mb-3 mt-4">
             <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#year" aria-expanded="false">
               Year
             </button>
             <div class="collapse" id="year">
-              
+              {% for year in years %}
               <div class="form-check">
-                <input class="form-check-input small" type="checkbox" value="2021" id="year2021">
-                <label class="form-check-label small" for="year2021">
-                  2021
+                <input class="form-check-input small" type="checkbox" value="{{ year[0] }}" id="year{{ year[0] }}">
+                <label class="form-check-label small" for="year{{ year[0] }}">
+                  {{ year[0] }} ({{ year[1] }})
                 </label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input small" type="checkbox" value="2020" id="year2020">
-                <label class="form-check-label small" for="year2020">
-                  2020
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input small" type="checkbox" value="2017" id="year2017">
-                <label class="form-check-label small" for="year2017">
-                  2017
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input small" type="checkbox" value="2012" id="year2012">
-                <label class="form-check-label small" for="year2012">
-                  2012
-                </label>
-              </div>
-
+              {% endfor %}
             </div>
           </li>
 
@@ -190,19 +174,18 @@
     </aside>
 
     <main class="order-1">
-      <div class="bd-intro ps-lg-4">
-        <h2 class="text-center">Potential Deals</h2>
-      </div>
 
-      <div class="ps-lg-4">
-          
+<!--      <div class="bd-intro ps-lg-4" style="margin-top: 40px;">-->
+<!--        <h2 class="text-left">Potential Deals</h2>-->
+<!--      </div>-->
 
+      <div class="ps-lg-4 mt-5">
         <div class="table-responsive mb-4">
             <table class="table table-striped table-sm" id="potential-deals-table" style="font-size: 12px;">
               <thead class="thead-dark">
                 <tr>
                   {% for header in table_headers %}
-                  <th class="text-center">{{ header }}</th>
+                  <th class="text-center" {% if header in columns_to_hide %} style="display:none;" {% endif %}>{{ header }}</th>
                   {% endfor %}
                 </tr>
               </thead>
@@ -219,12 +202,16 @@
                       <option value="Action3" {% if record[header] == "Action3" %} selected {% endif %}>Action3</option>
                     </select>
                   </td>
+                  {% elif header == "url" %}
+                  <td>
+                    <a href="{{ record[header] }}" target="_blank">link</a>
+                  </td>
                   {% elif header == "Comment" %}
                   <td>
                     <input type="text" class="form-select-sm"  style="width: 430px" placeholder="Comments" value="{{ record[header] }}">
                   </td>
                   {% else %}
-                  <td class="text-center {{ header|lower }}-col">{{ record[header] }}</td>
+                  <td class="text-center {{ header|lower }}-col" {% if header in columns_to_hide %} style="display:none;" {% endif %}>{{ record[header] }}</td>
                   {% endif %}
                   {% endfor %}
                 </tr>
@@ -290,15 +277,69 @@
           $(this).parent().show();
         });
 
+        var yearsSelected = [];
         $("#year input:checked").each(function() {
             console.log("Year selected " + $(this).attr('value'));
-            $("#potential-deals-table tbody tr td.make_model_year-col").filter(function() {
-            console.log($(this).text().toLowerCase());
-              if ($(this).text().toLowerCase().indexOf($(this).attr('value')) == -1) {
-                $(this).parent().hide();
-              }
-            });
+            yearsSelected.push($(this).attr('value'));
         });
+
+        if (yearsSelected.length > 0) {
+            $("#potential-deals-table tbody tr td.make_model_year-col").filter(function() {
+                var flag = 0;
+                for(var i = 0; i < yearsSelected.length; i++) {
+                    if ($(this).text().toLowerCase().indexOf(yearsSelected[i]) == -1) {
+                        flag = flag + 1;
+                    }
+                }
+                if (flag == yearsSelected.length) {
+                    $(this).parent().hide();
+                }
+            });
+        }
+
+
+        var makesSelected = [];
+        $("#make input:checked").each(function() {
+            console.log("Make selected " + $(this).attr('value'));
+            makesSelected.push($(this).attr('value').toLowerCase());
+        });
+
+        if (makesSelected.length > 0) {
+            $("#potential-deals-table tbody tr td.make_model_year-col").filter(function() {
+                var flag = 0;
+                for(var i = 0; i < makesSelected.length; i++) {
+                    if ($(this).text().toLowerCase().indexOf(makesSelected[i]) == -1) {
+                        flag = flag + 1;
+                    }
+                }
+                if (flag == makesSelected.length) {
+                    $(this).parent().hide();
+                }
+            });
+        }
+
+
+
+        var modelsSelected = [];
+        $("#model input:checked").each(function() {
+            console.log("Model selected " + $(this).attr('value'));
+            modelsSelected.push($(this).attr('value').toLowerCase());
+        });
+
+        if (modelsSelected.length > 0) {
+            $("#potential-deals-table tbody tr td.make_model_year-col").filter(function() {
+                var flag = 0;
+                for(var i = 0; i < modelsSelected.length; i++) {
+                    if ($(this).text().toLowerCase().indexOf(modelsSelected[i]) == -1) {
+                        flag = flag + 1;
+                    }
+                }
+                if (flag == modelsSelected.length) {
+                    $(this).parent().hide();
+                }
+            });
+        }
+
 
 
         var min_price = $("#min-price").val();
