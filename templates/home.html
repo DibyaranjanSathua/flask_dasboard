@@ -158,6 +158,23 @@
             </div>
           </li>
 
+
+          <li class="mb-4">
+            <button class="btn d-inline-flex align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#pricePctMmr" aria-expanded="false">
+              OfferPricePctMMR
+            </button>
+            <div class="collapse" id="pricePctMmr">
+              <div class="row g-3 mt-1">
+                <div class="col-sm-6">
+                  <input type="text" id="min-price-pct-mmr" class="form-control" placeholder="Min">
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" id="max-price-pct-mmr" class="form-control" placeholder="Max">
+                </div>
+              </div>
+            </div>
+          </li>
+
           <!-- btn::before is defined in css file which add > to all the buttons. So removed btn class -->
           <li class="mt-3 text-center">
             <button type="button" class="btn-outline-success" id="filter-apply-btn">Apply</button>
@@ -382,6 +399,29 @@
           console.log("Applying Max odometer filter")
           $("#potential-deals-table tbody tr td.odometer-col").filter(function() {
             if (parseFloat($(this).text()) > parseFloat(max_odometer)) {
+              $(this).parent().hide();
+            }
+          });
+        }
+
+
+        var min_price_pct_mmr = $("#min-price-pct-mmr").val();
+        var max_price_pct_mmr = $("#max-price-pct-mmr").val();
+        console.log("Min price pct mmr " + min_price);
+        console.log("Max price pct mmr " + max_price);
+        if (min_price_pct_mmr.trim()) {
+          console.log("Applying Min price pct mmr filter")
+          $("#potential-deals-table tbody tr td.offerpricepctmmr-col").filter(function() {
+            if (parseFloat($(this).text()) < parseFloat(min_price_pct_mmr)) {
+              $(this).parent().hide();
+            }
+          });
+        }
+
+        if (max_price_pct_mmr.trim()) {
+          console.log("Applying Max price pct mmr filter")
+          $("#potential-deals-table tbody tr td.offerpricepctmmr-col").filter(function() {
+            if (parseFloat($(this).text()) > parseFloat(max_price_pct_mmr)) {
               $(this).parent().hide();
             }
           });
