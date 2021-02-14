@@ -13,8 +13,9 @@
     <title>Autocloud Dashboard</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-
+<!--    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">-->
+<!--    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link href="{{ url_for('static',filename='css/doc.css') }}" rel="stylesheet">
 
   </head>
@@ -272,7 +273,8 @@
       </nav>
     </footer> -->
 
-    <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<!--    <script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
       var selectedRow;
@@ -435,8 +437,8 @@
         var processingRow = selectedRow;
         var dataString = $(this).serialize();
         var dealId = processingRow.find("td").eq(0).html();
-        var dealAction = processingRow.find("td").eq(38).find("select option:selected").val();
-        var dealComments = processingRow.find("td").eq(39).find("input").val();
+        var dealAction = processingRow.find("td").eq(31).find("select option:selected").val();
+        var dealComments = processingRow.find("td").eq(32).find("input").val();
           console.log("Deal Id is " + dealId);
           console.log("Deal Action is " + dealAction);
           console.log("Deal Comments are " + dealComments);
